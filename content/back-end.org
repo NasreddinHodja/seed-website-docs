@@ -90,28 +90,3 @@ And deploy:
 #+begin_src sh :caption "deploy worker"
 npx wrangler deploy
 #+end_src
-
-* Dev Docs
-The website is available at https://www.seed.computer/devdocs/
-
-1. Source files are written in [[https://orgmode.org/][Org Mode]]
-2. [[https://gohugo.io/][Hugo]] uses these to build the website
-
-** Hugo
-Initialize the docs website project:
-#+begin_src sh :caption "init hugo site"
-hugo new site docs
-#+end_src
-
-Basic hugo config:
-#+begin_src toml :caption "hugo.toml"
-baseURL = "/devdocs/"
-languageCode = "en-us"
-title = "Seed Website Dev Docs"
-theme = "PaperMod"
-#+end_src
-
-Build into our project's public folder:
-#+begin_src sh :caption "build"
-hugo -s docs -d ../public/devdocs
-#+end_src
