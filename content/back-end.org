@@ -1,0 +1,117 @@
+#+title: Back End
+
+* Cloudflare R2 Object Storage
+We will be using [[https://www.cloudflare.com/][Cloudflare]] to store public media and documents.
+
+** Cloudflare Worker
++ [[https://github.com/NasreddinHodja/seed-r2-worker][Github]]
+
+Little friend that will be serving our files through public URL.
+
+We will use: =https://seed-r2-worker.seedworker.workers.dev/<BUCKET_NAME>/<FILE_NAME>=
+
+*** Init
+#+begin_src sh :caption "init"
+npm create cloudflare@latest -- seed-r2-worker
+cd seed-r2-worker
+#+end_src
+
+For setup, select the following options:
+1. For "What would you like to start with?", choose "Hello World example".
+2. For "Which template would you like to use?", choose "Worker only".
+3. For "Which language do you want to use?", choose "JavaScript".
+4. For "Do you want to use git for version control?", choose "Yes".
+5. For "Do you want to deploy your application?", choose "No (we will be making some changes before deploying)".
+
+*** Create bucket
+#+begin_src sh :caption "create bucket"
+npx wrangler r2 bucket create <YOUR_BUCKET_NAME>
+#+end_src
+
+*** Bind bucket to worker
+#+begin_src sh :caption "wrangler.jsonc"
+{
+  "r2_buckets": [
+    {
+      "binding": "MY_BUCKET",
+      "bucket_name": "<YOUR_BUCKET_NAME>"
+    }
+  ]
+}
+#+end_src
+
+*** Simple worker
+#+begin_src javascript :caption "worker"
+export default {
+    async fetch(request, env) {
+        const url = new URL(request.url);
+        const key = url.pathname.slice(1);
+
+        switch (request.method) {
+            // case 'PUT':
+            //          await env.MY_BUCKET.put(key, request.body);
+            //          return new Response(`Put ${key} successfully!`);
+            case 'GET':
+                const object = await env.MY_BUCKET.get(key);
+
+                if (object === null) {
+                    return new Response('Object Not Found', { status: 404 });
+                }
+
+                const headers = new Headers();
+                object.writeHttpMetadata(headers);
+                headers.set('etag', object.httpEtag);
+
+                return new Response(object.body, {
+                    headers,
+                });
+            // case 'DELETE':
+            //          await env.MY_BUCKET.delete(key);
+            //          return new Response('Deleted!');
+
+            default:
+                return new Response('Method Not Allowed', {
+                    status: 405,
+                    headers: {
+                        Allow: 'GET',
+                    },
+                });
+        }
+    },
+};
+#+end_src
+
+We can test locally with:
+#+begin_src sh :caption "test locally"
+npx wrangler dev
+#+end_src
+
+And deploy:
+#+begin_src sh :caption "deploy worker"
+npx wrangler deploy
+#+end_src
+
+* Dev Docs
+The website is available at https://www.seed.computer/devdocs/
+
+1. Source files are written in [[https://orgmode.org/][Org Mode]]
+2. [[https://gohugo.io/][Hugo]] uses these to build the website
+
+** Hugo
+Initialize the docs website project:
+#+begin_src sh :caption "init hugo site"
+hugo new site docs
+#+end_src
+
+Basic hugo config:
+#+begin_src toml :caption "hugo.toml"
+baseURL = "/devdocs/"
+languageCode = "en-us"
+title = "Seed Website Dev Docs"
+theme = "PaperMod"
+#+end_src
+
+Build into our project's public folder:
+#+begin_src sh :caption "build"
+hugo -s docs -d ../public/devdocs
+#+end_src

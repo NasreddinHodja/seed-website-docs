@@ -1,0 +1,136 @@
+#+title: Front End
+
++ [[https://github.com/NasreddinHodja/seed-website][Github]]
+
+[[https://nuxt.com/][Nuxt]] is a front-end framework built on top of [[https://vuejs.org/][Vue.js]]. It provides a structured approach to building web applications with best practices baked in, including performance optimization, SEO, and modular development.
+
+*Pros*:
++ Flexibility: We are starting with Static Site Generation (SSG), but the framework allows for dynamic features in the future (API integration, authentication, etc.)
++ Mental health: Plenty of quality of life for the development experience
+
+*Cons*:
++ none 🔥🔥🔥
+
+* Initialize project
+=nuxi init= command will prompt you to select a package manager. For our project, we chose [[https://yarnpkg.com/][Yarn]].
+
+#+begin_src sh :caption "init"
+# create project
+npx nuxi init seed_website
+
+cd seed_website
+
+# install dependencies
+yarn install
+#+end_src
+
+** Yarn commands
+Changing the =package.json= scripts to use =nuxi=:
+#+begin_src json :caption "package.json"
+{
+  "scripts": {
+    "build": "nuxi build",
+    "dev": "nuxi dev",
+    "lserve": "npx serve .output/public",
+    "generate": "nuxi generate",
+    "preview": "nuxi preview",
+    "postinstall": "nuxi prepare"
+  },
+}
+#+end_src
+
+* Tailwind
+For styling, we chose [[https://tailwindcss.com/][tailwindcss]].
+
+Add tailwindcss mobule:
+#+begin_src sh :caption "tailwind dependency"
+nuxi module add tailwindcss
+#+end_src
+
+* Run project locally
+#+begin_src sh :caption "run project"
+yarn dev
+#+end_src
+
+* Generate the static site
+Generate using [[https://nuxt.com/docs/api/commands/generate][Static Site Generation (SSG) do Nuxt]]:
+#+begin_src sh :caption "generate project"
+yarn generate
+#+end_src
+
+Serve the generated site locally using:
+#+begin_src sh :caption "serve generated project"
+yarn lserve
+#+end_src
+
+* Project structure
++ =contents/=: Definition of the content of corresponding pages
++ =components/=: Reusable UI components
++ =pages/=: Website pages
++ =layout/=: Layout templates used across multiple pages
+
+* Content isolation
++ Each page is defined by a =.vue= file, which includes its layout, styling, and functionality:
+  - Pages live in =pages/=
+  - Reusable UI components live in =components/= and are used by pages.
++ Each page has its content (titles, descriptions, URLs for media, etc.) defined inside =.ts= files in =content/=
+
+The structure of the =pages/= directory determines the URL paths, and the =content/= directory mirrors this structure.
+
++ For every =.vue= file in =pages/= there is a corresponding =.ts= file in =content/= that holds its contents!
+  - Example: =content/methods/pbh/index.ts= is the content for =pages/methods/pbh/index.vue=
+
+* Content files
+Our content files are Typescript files that define an object that represents a page's content.
+
+** Objects
+An object is a way to represent a "thing" by describing its characteristics.
+
++ It has attributes that describe the thing's details.
++ These attributes (called *keys*) can hold simple values - like text or numbers - or even other objects.
++ An object looks like a list of key-value pairs, where each key is the attribute’s name, and the value describes that attribute.
+
+Example:
+#+begin_src typescript
+export default {
+  title: "About Us",
+  description: "We’re a group of friends building something cool.",
+  backgroundVideo: "[some-url]",
+  credits: [
+    {
+      artist: "Nasuredine",
+      link: "nasuredine.com",
+    },
+    {
+      artist: "Daniel Younguero",
+      link: "danidani.com",
+    },
+    {
+      artist: "Gabriel",
+      link: "gabriel.com",
+    },
+  ]
+}
+#+end_src
+
++ =title= is a key and its value is ="About Us"=
++ =credit='s value is a *list* (enclosed =[= and =]=)
++ inside =credit='s list we can see that we have 3 objects (encosed by ={= and =}=)
++ Each of those objects describes one artist, with:
+  - an artist =name= to be displayed
+  - a =link= that will be clickable in the page
+
+*So overall, the rules are*:
++ ={}= -> defines an object
++ =[]= -> defines a list (of objects, in this case)
++ =key: value= -> describes a piece of data
++ all entries are separated by =,=
+
+*This syntax must be respected - otherwise the website won't build.*
+
+*** Code Formatting
+Good code formatting is essential to keep the code understandable and easy to modify.
+
+*Indentation* means adding spaces at the start of a line to show its level inside the structure. This shapes the visual structure of our code.
+
+Every time you open a new multiline object or list, you should add 2 spaces of indentation for each level inside it. *Usually, your code editor will do this automatically.*

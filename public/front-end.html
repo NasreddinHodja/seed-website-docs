@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Front End</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Front End</h1>
+<ul class="org-ul">
+<li><a href="https://github.com/NasreddinHodja/seed-website">Github</a></li>
+</ul>
+
+<p>
+<a href="https://nuxt.com/">Nuxt</a> is a front-end framework built on top of <a href="https://vuejs.org/">Vue.js</a>. It provides a structured approach to building web applications with best practices baked in, including performance optimization, SEO, and modular development.
+</p>
+
+<p>
+<b>Pros</b>:
+</p>
+<ul class="org-ul">
+<li>Flexibility: We are starting with Static Site Generation (SSG), but the framework allows for dynamic features in the future (API integration, authentication, etc.)</li>
+<li>Mental health: Plenty of quality of life for the development experience</li>
+</ul>
+
+<p>
+<b>Cons</b>:
+</p>
+<ul class="org-ul">
+<li>none 🔥🔥🔥</li>
+</ul>
+<div id="outline-container-org843dfbd" class="outline-2">
+<h2 id="org843dfbd">Initialize project</h2>
+<div class="outline-text-2" id="text-org843dfbd">
+<p>
+<code>nuxi init</code> command will prompt you to select a package manager. For our project, we chose <a href="https://yarnpkg.com/">Yarn</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">create project
+</span>npx nuxi init seed_website
+
+<span style="font-weight: bold;">cd</span> seed_website
+
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">install dependencies
+</span>yarn install
+</pre>
+</div>
+</div>
+<div id="outline-container-orge020b13" class="outline-3">
+<h3 id="orge020b13">Yarn commands</h3>
+<div class="outline-text-3" id="text-orge020b13">
+<p>
+Changing the <code>package.json</code> scripts to use <code>nuxi</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-json">{
+  <span style="font-weight: bold;">"scripts"</span>: {
+    <span style="font-weight: bold;">"build"</span>: <span style="font-style: italic;">"nuxi build"</span>,
+    <span style="font-weight: bold;">"dev"</span>: <span style="font-style: italic;">"nuxi dev"</span>,
+    <span style="font-weight: bold;">"lserve"</span>: <span style="font-style: italic;">"npx serve .output/public"</span>,
+    <span style="font-weight: bold;">"generate"</span>: <span style="font-style: italic;">"nuxi generate"</span>,
+    <span style="font-weight: bold;">"preview"</span>: <span style="font-style: italic;">"nuxi preview"</span>,
+    <span style="font-weight: bold;">"postinstall"</span>: <span style="font-style: italic;">"nuxi prepare"</span>
+  },
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org0204640" class="outline-2">
+<h2 id="org0204640">Tailwind</h2>
+<div class="outline-text-2" id="text-org0204640">
+<p>
+For styling, we chose <a href="https://tailwindcss.com/">tailwindcss</a>.
+</p>
+
+<p>
+Add tailwindcss mobule:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">nuxi module add tailwindcss
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org7919703" class="outline-2">
+<h2 id="org7919703">Run project locally</h2>
+<div class="outline-text-2" id="text-org7919703">
+<div class="org-src-container">
+<pre class="src src-sh">yarn dev
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org6c12edc" class="outline-2">
+<h2 id="org6c12edc">Generate the static site</h2>
+<div class="outline-text-2" id="text-org6c12edc">
+<p>
+Generate using <a href="https://nuxt.com/docs/api/commands/generate">Static Site Generation (SSG) do Nuxt</a>:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">yarn generate
+</pre>
+</div>
+
+<p>
+Serve the generated site locally using:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">yarn lserve
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org2157936" class="outline-2">
+<h2 id="org2157936">Project structure</h2>
+<div class="outline-text-2" id="text-org2157936">
+<ul class="org-ul">
+<li><code>contents/</code>: Definition of the content of corresponding pages</li>
+<li><code>components/</code>: Reusable UI components</li>
+<li><code>pages/</code>: Website pages</li>
+<li><code>layout/</code>: Layout templates used across multiple pages</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org69658f3" class="outline-2">
+<h2 id="org69658f3">Content isolation</h2>
+<div class="outline-text-2" id="text-org69658f3">
+<ul class="org-ul">
+<li>Each page is defined by a <code>.vue</code> file, which includes its layout, styling, and functionality:
+<ul class="org-ul">
+<li>Pages live in <code>pages/</code></li>
+<li>Reusable UI components live in <code>components/</code> and are used by pages.</li>
+</ul></li>
+<li>Each page has its content (titles, descriptions, URLs for media, etc.) defined inside <code>.ts</code> files in <code>content/</code></li>
+</ul>
+
+<p>
+The structure of the <code>pages/</code> directory determines the URL paths, and the <code>content/</code> directory mirrors this structure.
+</p>
+
+<ul class="org-ul">
+<li>For every <code>.vue</code> file in <code>pages/</code> there is a corresponding <code>.ts</code> file in <code>content/</code> that holds its contents!
+<ul class="org-ul">
+<li>Example: <code>content/methods/pbh/index.ts</code> is the content for <code>pages/methods/pbh/index.vue</code></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgeca1cd6" class="outline-2">
+<h2 id="orgeca1cd6">Content files</h2>
+<div class="outline-text-2" id="text-orgeca1cd6">
+<p>
+Our content files are Typescript files that define an object that represents a page's content.
+</p>
+</div>
+<div id="outline-container-org184a355" class="outline-3">
+<h3 id="org184a355">Objects</h3>
+<div class="outline-text-3" id="text-org184a355">
+<p>
+An object is a way to represent a "thing" by describing its characteristics.
+</p>
+
+<ul class="org-ul">
+<li>It has attributes that describe the thing's details.</li>
+<li>These attributes (called <b>keys</b>) can hold simple values - like text or numbers - or even other objects.</li>
+<li>An object looks like a list of key-value pairs, where each key is the attribute’s name, and the value describes that attribute.</li>
+</ul>
+
+<p>
+Example:
+</p>
+<div class="org-src-container">
+<pre class="src src-typescript"><span style="font-weight: bold;">export</span> <span style="font-weight: bold;">default</span> {
+  title: <span style="font-style: italic;">"About Us"</span>,
+  description: <span style="font-style: italic;">"We&#8217;re a group of friends building something cool."</span>,
+  backgroundVideo: <span style="font-style: italic;">"[some-url]"</span>,
+  credits: [
+    {
+      artist: <span style="font-style: italic;">"Nasuredine"</span>,
+      link: <span style="font-style: italic;">"nasuredine.com"</span>,
+    },
+    {
+      artist: <span style="font-style: italic;">"Daniel Younguero"</span>,
+      link: <span style="font-style: italic;">"danidani.com"</span>,
+    },
+    {
+      artist: <span style="font-style: italic;">"Gabriel"</span>,
+      link: <span style="font-style: italic;">"gabriel.com"</span>,
+    },
+  ]
+}
+</pre>
+</div>
+
+<ul class="org-ul">
+<li><code>title</code> is a key and its value is <code>"About Us"</code></li>
+<li><code>credit</code>'s value is a <b>list</b> (enclosed <code>[</code> and <code>]</code>)</li>
+<li>inside <code>credit</code>'s list we can see that we have 3 objects (encosed by <code>{</code> and <code>}</code>)</li>
+<li>Each of those objects describes one artist, with:
+<ul class="org-ul">
+<li>an artist <code>name</code> to be displayed</li>
+<li>a <code>link</code> that will be clickable in the page</li>
+</ul></li>
+</ul>
+
+<p>
+<b>So overall, the rules are</b>:
+</p>
+<ul class="org-ul">
+<li><code>{}</code> -&gt; defines an object</li>
+<li><code>[]</code> -&gt; defines a list (of objects, in this case)</li>
+<li><code>key: value</code> -&gt; describes a piece of data</li>
+<li>all entries are separated by <code>,</code></li>
+</ul>
+
+<p>
+<b>This syntax must be respected - otherwise the website won't build.</b>
+</p>
+</div>
+<div id="outline-container-org59e8f6e" class="outline-4">
+<h4 id="org59e8f6e">Code Formatting</h4>
+<div class="outline-text-4" id="text-org59e8f6e">
+<p>
+Good code formatting is essential to keep the code understandable and easy to modify.
+</p>
+
+<p>
+<b>Indentation</b> means adding spaces at the start of a line to show its level inside the structure. This shapes the visual structure of our code.
+</p>
+
+<p>
+Every time you open a new multiline object or list, you should add 2 spaces of indentation for each level inside it. <b>Usually, your code editor will do this automatically.</b>
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

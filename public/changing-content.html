@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Changing Content</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Changing Content</h1>
+<div id="outline-container-org0a51724" class="outline-2">
+<h2 id="org0a51724">Basic concepts</h2>
+<div class="outline-text-2" id="text-org0a51724">
+<p>
+(Make sure to read <a href="./front-end.html#org69658f3">Content Isolation</a>)
+</p>
+</div>
+<div id="outline-container-org1c040ff" class="outline-3">
+<h3 id="org1c040ff">Git</h3>
+<div class="outline-text-3" id="text-org1c040ff">
+<p>
+Git is like a time machine for your project.
+</p>
+
+<p>
+It keeps track of every change you (or anyone) make to the website's files.
+</p>
+
+<p>
+With Git you can:
+</p>
+<ul class="org-ul">
+<li>Go back to previous versions if something breaks</li>
+<li>See who changed what and when</li>
+<li>Work together without overwriting each other's work</li>
+</ul>
+</div>
+<div id="outline-container-org30a0553" class="outline-4">
+<h4 id="org30a0553">Commits</h4>
+<div class="outline-text-4" id="text-org30a0553">
+<p>
+Git doesn’t automatically track every little change you make.
+You have to tell it when you’re ready to save a snapshot.
+</p>
+
+<p>
+This is called a <b>commit</b> - it’s like saying: "alright, git, I think I'm done with this bundle of changes&#x2026;"
+</p>
+
+<p>
+<b>When you commit, you’re officially recording the changes you made to the project.</b>
+</p>
+
+<p>
+Examples:
+</p>
+<ul class="org-ul">
+<li>Fixing a bug:
+<ul class="org-ul">
+<li>If it’s a small fix, I’ll just solve it and make one commit at the end.</li>
+<li>But if it involves multiple steps, I might commit after each meaningful step - so I can go back if something breaks.</li>
+</ul></li>
+<li>Changing a page title:
+<ul class="org-ul">
+<li>I’ll open the corresponding file in <code>content/</code>, update the title, and then make a commit with a message like: "fixed title for page X".</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org415b6ec" class="outline-4">
+<h4 id="org415b6ec">Branches</h4>
+<div class="outline-text-4" id="text-org415b6ec">
+<p>
+Our project lives on a branch called <code>main</code> — like the main road where everything eventually ends up.
+</p>
+
+<p>
+A <b>branch</b> is a separate path where you can work on something new without messing up the main version.
+</p>
+
+<p>
+Branches can:
+</p>
+<ul class="org-ul">
+<li>Be created from other branches
+<ul class="org-ul">
+<li>For example, we usually create new branches from <code>dev</code> when we want to work on a specific task.</li>
+</ul></li>
+<li>Be <b>merged</b> into other branches
+<ul class="org-ul">
+<li>This is how we update a branch with new changes from another.</li>
+<li>For example, when a new feature/fix is ready, we merge its branch back into <code>dev</code> to include the new work.</li>
+</ul></li>
+</ul>
+</div>
+<ul class="org-ul">
+<li><a id="org5a70c4f"></a>Branches in our project<br />
+<div class="outline-text-5" id="text-org5a70c4f">
+<p>
+We use branches to keep things organized and safe.
+</p>
+
+<p>
+These are the main ones we'll work with:
+</p>
+<ul class="org-ul">
+<li><code>main</code> - The official branch
+<ul class="org-ul">
+<li>This is the version that gets published to the actual website.</li>
+<li>Only the project owner can make changes here.</li>
+<li>Think of it as the live, stable version.</li>
+</ul></li>
+<li><code>dev</code> - The development branch
+<ul class="org-ul">
+<li>This is where we work on new features and fixes.</li>
+<li>Whenever we want to fix something or add something new, we create a new branch from <code>dev</code>.</li>
+<li>After we finish and commit the changes, we merge that branch back into <code>dev</code>.</li>
+</ul></li>
+</ul>
+
+<p>
+Examples:
+</p>
+<ul class="org-ul">
+<li>Adding a new page:
+<ul class="org-ul">
+<li>I'll create a branch called <code>new-about-page</code>, build the page there, and when it's ready, I'll merge it into the <code>dev</code> branch.</li>
+</ul></li>
+<li>Making experimental changes: (I want to test or prototype light/dark modes for the website)
+<ul class="org-ul">
+<li>I might create a branch like <code>dark-mode-test</code>, so I can experiment without affecting what’s already working.</li>
+</ul></li>
+</ul>
+
+<p>
+Over time, <code>dev</code> will have new changes that <code>main</code> doesn’t know about yet - <code>dev</code> is "<b>ahead</b>" of <code>main</code>.
+</p>
+
+<p>
+When it's time to publish those changes to the website, the project owner will merge <code>dev</code> into <code>main</code>.
+</p>
+</div>
+</li>
+<li><a id="orgf9fef99"></a>Naming branches<br />
+<div class="outline-text-5" id="text-orgf9fef99">
+<p>
+When you create a new branch, it's important to give it a name that clearly describes what you're working on.
+This helps everyone understand what the branch is for - without needing to open it.
+</p>
+
+<p>
+<b>Use short, clear, lowercase names with '-' to separate words.</b>
+</p>
+
+<p>
+Examples:
+</p>
+<ul class="org-ul">
+<li><code>fix-typo-on-homepage</code> - fixing a small text error</li>
+<li><code>add-contact-form</code> - adding a new feature</li>
+<li><code>update-footer-links</code> - making content changes</li>
+<li><code>issue-23-fix-login-bug</code> - referencing a task or GitHub issue</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org6d12963" class="outline-3">
+<h3 id="org6d12963">GitHub</h3>
+<div class="outline-text-3" id="text-org6d12963">
+<p>
+GitHub is an online platform that hosts our Git project, so we can work together and share updates.
+</p>
+
+<p>
+It also gives us tools like:
+</p>
+<ul class="org-ul">
+<li><b>Pull requests</b> — to review and discuss changes before they go in</li>
+<li>Issue tracking — to assign and follow tasks</li>
+<li>Online backups of the entire project</li>
+</ul>
+
+<p>
+You’ll use GitHub to <b>push</b> your changes to the team, and <b>pull</b> new updates when someone else makes changes.
+</p>
+
+<p>
+Once your project is hosted on GitHub, it lives in two places:
+</p>
+<ul class="org-ul">
+<li><b>Local</b> - the version on your computer (what you open and edit)</li>
+<li><b>Remote</b> - the version on GitHub (what the team sees and works with online)</li>
+</ul>
+
+<p>
+<b>You make changes locally, and then use GitHub Desktop to push those changes to the remote.</b>
+</p>
+
+<p>
+<b>If someone else makes changes, you pull from the remote to update your local copy.</b>
+</p>
+
+<p>
+Think of it like working on a shared Google Doc - except each person has their own offline copy, and you sync with GitHub to stay up to date.
+</p>
+</div>
+<div id="outline-container-org5f3b4cd" class="outline-4">
+<h4 id="org5f3b4cd">Pull requets</h4>
+<div class="outline-text-4" id="text-org5f3b4cd">
+<p>
+A <b>pull request</b> (PR) is a request to merge a branch to another.
+It is a safety step so that people can review the changes before updating important branches.
+</p>
+
+<ul class="org-ul">
+<li>It's a safety step - instead of merging directly, you ask for the changes to be reviewed first</li>
+<li>This helps catch mistakes and makes sure everything looks good before updating important branches like <code>dev</code> or <code>main</code></li>
+<li>On GitHub, you’ll create a pull request when you’re done with your work and ready to bring your branch back into <code>dev</code></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orgce6c733" class="outline-3">
+<h3 id="orgce6c733">GitHub Desktop</h3>
+<div class="outline-text-3" id="text-orgce6c733">
+<p>
+<a href="https://desktop.github.com/download/">GitHub Desktop</a> is a visual app that makes using Git easy - no terminal needed.
+</p>
+
+<p>
+<b>It's is a GUI client for Git.</b>
+</p>
+
+<p>
+With it, you can:
+</p>
+<ul class="org-ul">
+<li>Open the project</li>
+<li>See which files you’ve changed</li>
+<li>Make a commit and write its message</li>
+<li>Push your changes to GitHub</li>
+<li>Pull new updates from others</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org7fb51db" class="outline-2">
+<h2 id="org7fb51db">Steps</h2>
+<div class="outline-text-2" id="text-org7fb51db">
+<p>
+First, <a href="#org99e7095">make sure you have everything setup</a>.
+</p>
+
+
+<ol class="org-ol">
+<li><a href="#orgfaf52a1">Pull from remote</a>:
+<ul class="org-ul">
+<li>Make sure your local project is up to date with the latest changes</li>
+</ul></li>
+<li><a href="#orgb62555b">Create a branch</a>:
+<ul class="org-ul">
+<li>Create a new branch from <code>dev</code> and give it a clear, descriptive name based on what you're working on.</li>
+</ul></li>
+<li><a href="#org78a5f7b">Make your changes</a>:
+<ul class="org-ul">
+<li>Edit the files you need - usually in <code>content/</code> for text and content updates.</li>
+</ul></li>
+<li><a href="#org781590d">Commit your changes</a>
+<ul class="org-ul">
+<li>Once the issue seems solved, commit with a short, clear message explaining what you did.</li>
+</ul></li>
+<li><a href="#orga8346c9">Push to remote</a>
+<ul class="org-ul">
+<li>Send your branch (and commits) to GitHub. This will create the branch on the remote project.</li>
+</ul></li>
+<li><a href="#orge5fad9a">Open a pull request</a>
+<ul class="org-ul">
+<li>On GitHub, create a pull request from your branch into dev, so others can review and merge your work.</li>
+</ul></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org99e7095" class="outline-2">
+<h2 id="org99e7095">Setup</h2>
+<div class="outline-text-2" id="text-org99e7095">
+</div>
+<div id="outline-container-org7e7806e" class="outline-3">
+<h3 id="org7e7806e">Git and Github</h3>
+<div class="outline-text-3" id="text-org7e7806e">
+<ul class="org-ul">
+<li>Github
+<ul class="org-ul">
+<li>Make a github account</li>
+</ul></li>
+<li>Github Desktop
+<ul class="org-ul">
+<li>download, install, and log into you're github account in Githut Desktop</li>
+</ul></li>
+<li>Clone the repository
+<ol class="org-ol">
+<li>Go to <b>File</b> -&gt; <b>Clone Repository</b></li>
+<li>Click on the "URL" tab</li>
+<li>Paste the repository URL into the field (e.g.: <a href="https://github.com/nasreddinhodja/seed-website">https://github.com/nasreddinhodja/seed-website</a>)</li>
+<li>Choose a local folder where you want to save the project</li>
+<li>Click "Clone"</li>
+</ol></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgb89df6c" class="outline-3">
+<h3 id="orgb89df6c">Code Editing</h3>
+<div class="outline-text-3" id="text-orgb89df6c">
+<p>
+Code is just text - and it can be edited with any text editor.
+</p>
+
+<p>
+But some editors are specially made for code and include features that make editing easier, safer, and more comfortable.
+</p>
+
+<p>
+One option is <a href="https://vscodium.com/">VSCodium</a> - a free, open-source version of VS Code, with no tracking.
+</p>
+
+<p>
+<b>OBS</b>: Recommended Plugins for VSCodium:
+</p>
+<ul class="org-ul">
+<li><b>Prettier</b> - formats our code</li>
+<li><b>ESLint</b> - highlights mistakes or syntax issues as you type</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfaf52a1" class="outline-2">
+<h2 id="orgfaf52a1">Pull from remote</h2>
+<div class="outline-text-2" id="text-orgfaf52a1">
+<p>
+Before making any changes, you should pull the latest updates from GitHub to make sure your project is up to date.
+</p>
+
+<p>
+This prevents conflicts and ensures you're working with the most recent version of the files.
+</p>
+
+<ol class="org-ol">
+<li>Open GitHub Desktop</li>
+<li>In the top-left, make sure your repository is selected</li>
+<li>At the top, click the button labeled "Fetch origin"</li>
+<li>If new changes exist, it will become "Pull origin"</li>
+<li>Click "Pull origin" to update your local project</li>
+</ol>
+
+<p>
+Now you're synced with the remote version and ready to create a branch.
+</p>
+</div>
+</div>
+<div id="outline-container-orgb62555b" class="outline-2">
+<h2 id="orgb62555b">Create a branch</h2>
+<div class="outline-text-2" id="text-orgb62555b">
+<ol class="org-ol">
+<li>Open GitHub Desktop</li>
+<li>Make sure your repository is selected (top left)</li>
+<li>In the top toolbar, click on the current branch name (it might say main or dev)</li>
+<li>In the dropdown, click "New Branch"</li>
+<li>Give your branch a clear, short name</li>
+<li>Make sure the base branch is set to <code>dev</code></li>
+<li>Click "Create Branch"</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org78a5f7b" class="outline-2">
+<h2 id="org78a5f7b">Make your changes</h2>
+<div class="outline-text-2" id="text-org78a5f7b">
+<p>
+(See <a href="./front-end.html#orgeca1cd6">Content files</a>)
+</p>
+<ol class="org-ol">
+<li>Open VSCodium</li>
+<li>Click File -&gt; Open Folder&#x2026;</li>
+<li>Choose the folder where you cloned the project</li>
+<li>Navigate to the file you want to change and make your changes</li>
+<li>save with <code>Ctrl+S</code>!</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org781590d" class="outline-2">
+<h2 id="org781590d">Commit your changes</h2>
+<div class="outline-text-2" id="text-org781590d">
+<ol class="org-ol">
+<li>Open GitHub Desktop</li>
+<li>You’ll see a list of files that were changed (on the left)</li>
+<li>Click on each file to preview your changes</li>
+<li>At the bottom left, write a short commit message describing what you did</li>
+<li>Click the "Commit to [your branch name]" button</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orga8346c9" class="outline-2">
+<h2 id="orga8346c9">Push to remote</h2>
+<div class="outline-text-2" id="text-orga8346c9">
+<ol class="org-ol">
+<li>In GitHub Desktop, look at the top toolbar</li>
+<li>You’ll see a button that says “Push origin” — click it</li>
+<li>GitHub Desktop will send your commits to the matching branch on GitHub</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orge5fad9a" class="outline-2">
+<h2 id="orge5fad9a">Open a pull request</h2>
+<div class="outline-text-2" id="text-orge5fad9a">
+<ol class="org-ol">
+<li>Go to the project on GitHub website</li>
+<li>GitHub will often show a message:
+<ul class="org-ul">
+<li>"Your recently pushed branch had recent pushes&#x2026;"</li>
+<li>Click "Compare &amp; pull request"</li>
+</ul></li>
+<li>If you don’t see the message, go to the "Pull requests" tab at the top of the repo, then click "New pull request"</li>
+<li>Set the base branch to <code>dev</code> and the compare branch to the one you created</li>
+<li>Write a short title and optional description explaining what you changed</li>
+<li>Click "Create pull request"</li>
+</ol>
+</div>
+</div>
+</div>
+</body>
+</html>

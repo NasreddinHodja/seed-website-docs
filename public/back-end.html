@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Back End</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Back End</h1>
+<div id="outline-container-org1ddfd27" class="outline-2">
+<h2 id="org1ddfd27">Cloudflare R2 Object Storage</h2>
+<div class="outline-text-2" id="text-org1ddfd27">
+<p>
+We will be using <a href="https://www.cloudflare.com/">Cloudflare</a> to store public media and documents.
+</p>
+</div>
+<div id="outline-container-orgfcc5492" class="outline-3">
+<h3 id="orgfcc5492">Cloudflare Worker</h3>
+<div class="outline-text-3" id="text-orgfcc5492">
+<ul class="org-ul">
+<li><a href="https://github.com/NasreddinHodja/seed-r2-worker">Github</a></li>
+</ul>
+
+<p>
+Little friend that will be serving our files through public URL.
+</p>
+
+<p>
+We will use: <code>https://seed-r2-worker.seedworker.workers.dev/&lt;BUCKET_NAME&gt;/&lt;FILE_NAME&gt;</code>
+</p>
+</div>
+<div id="outline-container-orge5b1148" class="outline-4">
+<h4 id="orge5b1148">Init</h4>
+<div class="outline-text-4" id="text-orge5b1148">
+<div class="org-src-container">
+<pre class="src src-sh">npm create cloudflare@latest -- seed-r2-worker
+<span style="font-weight: bold;">cd</span> seed-r2-worker
+</pre>
+</div>
+
+<p>
+For setup, select the following options:
+</p>
+<ol class="org-ol">
+<li>For "What would you like to start with?", choose "Hello World example".</li>
+<li>For "Which template would you like to use?", choose "Worker only".</li>
+<li>For "Which language do you want to use?", choose "JavaScript".</li>
+<li>For "Do you want to use git for version control?", choose "Yes".</li>
+<li>For "Do you want to deploy your application?", choose "No (we will be making some changes before deploying)".</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org178bd57" class="outline-4">
+<h4 id="org178bd57">Create bucket</h4>
+<div class="outline-text-4" id="text-org178bd57">
+<div class="org-src-container">
+<pre class="src src-sh">npx wrangler r2 bucket create &lt;YOUR_BUCKET_NAME&gt;
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org824333d" class="outline-4">
+<h4 id="org824333d">Bind bucket to worker</h4>
+<div class="outline-text-4" id="text-org824333d">
+<div class="org-src-container">
+<pre class="src src-sh">{
+  <span style="font-style: italic;">"r2_buckets"</span>: [
+    {
+      <span style="font-style: italic;">"binding"</span>: <span style="font-style: italic;">"MY_BUCKET"</span>,
+      <span style="font-style: italic;">"bucket_name"</span>: <span style="font-style: italic;">"&lt;YOUR_BUCKET_NAME&gt;"</span>
+    }
+  ]
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb956abf" class="outline-4">
+<h4 id="orgb956abf">Simple worker</h4>
+<div class="outline-text-4" id="text-orgb956abf">
+<div class="org-src-container">
+<pre class="src src-javascript"><span style="font-weight: bold;">export</span> <span style="font-weight: bold;">default</span> {
+    <span style="font-weight: bold;">async</span> fetch(request, env) {
+        <span style="font-weight: bold;">const</span> <span style="font-weight: bold; font-style: italic;">url</span> = <span style="font-weight: bold;">new</span> <span style="font-weight: bold; text-decoration: underline;">URL</span>(request.url);
+        <span style="font-weight: bold;">const</span> <span style="font-weight: bold; font-style: italic;">key</span> = url.pathname.slice(1);
+
+        <span style="font-weight: bold;">switch</span> (request.method) {
+            <span style="font-weight: bold; font-style: italic;">// </span><span style="font-weight: bold; font-style: italic;">case 'PUT':
+</span>            <span style="font-weight: bold; font-style: italic;">//          </span><span style="font-weight: bold; font-style: italic;">await env.MY_BUCKET.put(key, request.body);
+</span>            <span style="font-weight: bold; font-style: italic;">//          </span><span style="font-weight: bold; font-style: italic;">return new Response(`Put ${key} successfully!`);
+</span>            <span style="font-weight: bold;">case</span> <span style="font-style: italic;">'GET'</span>:
+                <span style="font-weight: bold;">const</span> <span style="font-weight: bold; font-style: italic;">object</span> = <span style="font-weight: bold;">await</span> env.MY_BUCKET.get(key);
+
+                <span style="font-weight: bold;">if</span> (object === <span style="font-weight: bold; text-decoration: underline;">null</span>) {
+                    <span style="font-weight: bold;">return</span> <span style="font-weight: bold;">new</span> <span style="font-weight: bold; text-decoration: underline;">Response</span>(<span style="font-style: italic;">'Object Not Found'</span>, { status: 404 });
+                }
+
+                <span style="font-weight: bold;">const</span> <span style="font-weight: bold; font-style: italic;">headers</span> = <span style="font-weight: bold;">new</span> <span style="font-weight: bold; text-decoration: underline;">Headers</span>();
+                object.writeHttpMetadata(headers);
+                headers.set(<span style="font-style: italic;">'etag'</span>, object.httpEtag);
+
+                <span style="font-weight: bold;">return</span> <span style="font-weight: bold;">new</span> <span style="font-weight: bold; text-decoration: underline;">Response</span>(object.body, {
+                    headers,
+                });
+            <span style="font-weight: bold; font-style: italic;">// </span><span style="font-weight: bold; font-style: italic;">case 'DELETE':
+</span>            <span style="font-weight: bold; font-style: italic;">//          </span><span style="font-weight: bold; font-style: italic;">await env.MY_BUCKET.delete(key);
+</span>            <span style="font-weight: bold; font-style: italic;">//          </span><span style="font-weight: bold; font-style: italic;">return new Response('Deleted!');
+</span>
+            <span style="font-weight: bold;">default</span>:
+                <span style="font-weight: bold;">return</span> <span style="font-weight: bold;">new</span> <span style="font-weight: bold; text-decoration: underline;">Response</span>(<span style="font-style: italic;">'Method Not Allowed'</span>, {
+                    status: 405,
+                    headers: {
+                        Allow: <span style="font-style: italic;">'GET'</span>,
+                    },
+                });
+        }
+    },
+};
+</pre>
+</div>
+
+<p>
+We can test locally with:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">npx wrangler dev
+</pre>
+</div>
+
+<p>
+And deploy:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">npx wrangler deploy
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org6ce1869" class="outline-2">
+<h2 id="org6ce1869">Dev Docs</h2>
+<div class="outline-text-2" id="text-org6ce1869">
+<p>
+The website is available at <a href="https://www.seed.computer/devdocs/">https://www.seed.computer/devdocs/</a>
+</p>
+
+<ol class="org-ol">
+<li>Source files are written in <a href="https://orgmode.org/">Org Mode</a></li>
+<li><a href="https://gohugo.io/">Hugo</a> uses these to build the website</li>
+</ol>
+</div>
+<div id="outline-container-org0fb2729" class="outline-3">
+<h3 id="org0fb2729">Hugo</h3>
+<div class="outline-text-3" id="text-org0fb2729">
+<p>
+Initialize the docs website project:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">hugo new site docs
+</pre>
+</div>
+
+<p>
+Basic hugo config:
+</p>
+<div class="org-src-container">
+<pre class="src src-toml"><span style="font-weight: bold; font-style: italic;">baseURL</span> = <span style="font-style: italic;">"/devdocs/"</span>
+<span style="font-weight: bold; font-style: italic;">languageCode</span> = <span style="font-style: italic;">"en-us"</span>
+<span style="font-weight: bold; font-style: italic;">title</span> = <span style="font-style: italic;">"Seed Website Dev Docs"</span>
+<span style="font-weight: bold; font-style: italic;">theme</span> = <span style="font-style: italic;">"PaperMod"</span>
+</pre>
+</div>
+
+<p>
+Build into our project's public folder:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">hugo -s docs -d ../public/devdocs
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
