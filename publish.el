@@ -1,5 +1,9 @@
 ;; setup project publishing
 
+(when (file-directory-p "./public")
+  (delete-directory "./public" t))
+(make-directory "./public" t)
+
 ;; init package system
 (require 'package)
 (setq package-user-dit (expand-file-name "./.packages"))
